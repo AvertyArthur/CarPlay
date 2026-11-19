@@ -870,6 +870,35 @@ input,textarea{-webkit-user-select:text;user-select:text}
 #ytWrap{position:fixed;z-index:15;border-radius:10px;overflow:hidden;background:#000;box-shadow:0 6px 20px rgba(0,0,0,.45);transition:left .25s,top .25s,width .25s,height .25s}
 #ytWrap.mini{border:1px solid var(--line)}
 #ytWrap iframe{width:100%;height:100%;display:block;border:0}
+#dash{flex-direction:row!important}
+#dash .dmap-card{flex:1.5;padding:0;min-width:0}
+#dash .dmap-card .ttl{display:none}
+#dash .dmap{position:absolute!important;inset:0;z-index:0;border-radius:var(--r);overflow:hidden;background:transparent}
+.dmap-card .map{opacity:.6}
+.dmap-card.live .map{display:none}
+.dmap .leaflet-control-attribution{font-size:8px!important}
+#dash .dm-open{position:absolute;left:10px;top:10px;z-index:450;display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:rgba(20,20,24,.8);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);color:#fff;font-size:15px;font-weight:600;padding:10px 16px 10px 12px;border-radius:14px}
+#dash .dm-open svg{width:18px;height:18px;fill:var(--sub)}
+#dash .dmap-card .nav-next{position:absolute!important;left:10px;right:10px;top:10px;z-index:460;width:auto;margin:0}
+#dash .dmap-card .dest-quick{position:absolute!important;left:10px;right:10px;bottom:10px;z-index:450;margin:0;display:flex;flex-direction:row;gap:8px}
+#dash .dmap-card .dq{flex:1;min-width:0;padding:8px 10px;gap:9px;background:rgba(20,20,24,.82)}
+#dash .dmap-card .dq .pin{width:32px;height:32px}#dash .dmap-card .dq .pin svg{width:17px;height:17px}
+#dash .dmap-card .dq .go{display:none}#dash .dmap-card .dq b{font-size:14px}
+#dcol{flex:1;flex-direction:column;min-width:0}
+#dcol .card{flex:1;min-height:0}
+.bigrow #dcol{flex-direction:row}
+.info-w{display:flex;align-items:center;gap:12px;padding:10px 14px;position:relative;overflow:hidden}
+.iw-spd{display:flex;flex-direction:column;align-items:center;justify-content:center;width:78px;height:78px;border-radius:50%;flex:none;background:radial-gradient(circle,#0b1220 60%,transparent 61%),conic-gradient(var(--accent),color-mix(in srgb,var(--accent) 20%,transparent));box-shadow:0 0 18px color-mix(in srgb,var(--accent) 35%,transparent)}
+.iw-spd b{font-size:28px;font-weight:700;line-height:1;letter-spacing:-1px}
+.iw-spd span{font-size:10px;color:var(--sub);font-weight:600}
+.iw-r{min-width:0;position:relative;z-index:1}
+.iw-w{font-size:22px;font-weight:600}
+.iw-d{font-size:12px;color:var(--sub);text-transform:capitalize}
+.iw-car{position:absolute;right:-6px;bottom:4px;width:46%;height:70%;background-size:contain;background-position:right bottom;background-repeat:no-repeat;filter:drop-shadow(0 6px 8px rgba(0,0,0,.5));display:none}
+.info-w.has-car .iw-car{display:block}
+#cluster{display:none}#cluster.on{display:flex}
+#cluster .cluster{flex:1;height:100%}
+.i-gauge{background:linear-gradient(160deg,#3a3a3c,#111114)}
 .row2 .music-card{flex:1;padding:10px 12px}
 .row2 .np{gap:10px}
 .row2 .art{width:44px;height:44px;border-radius:10px}
@@ -1041,9 +1070,46 @@ body.forcep #rot{display:none!important}
   <main id="main">
     <!-- DASHBOARD -->
     <section class="screen on" id="dash">
+        <div class="card nav-card dmap-card" id="wNav">
+          <div class="map"></div>
+          <div class="dmap" id="dashMap"></div>
+          <div class="ttl"><div class="ico i-waze" data-icon="nav" id="navIco"></div><span id="navTtl">Waze</span><small id="navSub">Destinations</small></div>
+          <button class="nav-next" id="navNext" data-go="gps" style="display:none"></button>
+          <button class="dm-open" data-go="navapp" aria-label="Ouvrir la navigation"><svg viewBox="0 0 24 24"><path d="M10 3a7 7 0 0 1 5.6 11.2l5.1 5.1-1.4 1.4-5.1-5.1A7 7 0 1 1 10 3zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg>Où va-t-on ?</button>
+          <div class="dest-quick" id="destQuick"></div>
+        </div>
+      <div class="row2" id="dcol">
+        <div class="card music-card" id="wMusic">
+          <div class="ttl"><div class="ico i-music" data-icon="note"></div>Musique<button class="xp" data-xp="music" aria-label="Plein écran"></button></div>
+          <div class="np">
+            <div class="yt-slot" id="ytSlotCard"><span>YouTube</span></div>
+            <div class="art" data-icon="note"></div>
+            <div><b id="npTitle">Apple Music</b><span id="npSub">Toucher pour ouvrir</span></div>
+            <div class="ctrl">
+              <a id="mPrev" aria-label="Playlist précédente"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zM9.5 12 18 6v12z"/></svg></a>
+              <a id="mPlay" class="big" aria-label="Ouvrir"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></a>
+              <a id="mNext" aria-label="Playlist suivante"><svg viewBox="0 0 24 24"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"/></svg></a>
+            </div>
+          </div>
+          <div class="plq" id="plQuick"></div>
+        </div>
+        <div class="card info-w" id="wInfo" data-go="cluster">
+          <div class="iw-spd"><b id="iSpd">--</b><span>km/h</span></div>
+          <div class="iw-r"><div class="iw-w" id="iW">--°</div><div class="iw-d" id="iDate"></div></div>
+          <div class="iw-car" id="iCar"></div>
+        </div>
+        <div class="card fav-card" id="wFav">
+          <div class="ttl"><div class="ico i-phone" data-icon="phone"></div>Favoris<button class="xp" data-xp="fav" aria-label="Plein écran"></button></div>
+          <div class="favs" id="favQuick"></div>
+        </div>
+      </div>
+      <div class="empty" id="dashEmpty" style="display:none;margin:auto">Tous les widgets sont masqués.<br><button class="pill acc" data-open-tab="home">Choisir les widgets</button></div>
+    </section>
+
+    <!-- COMPTEUR -->
+    <section class="screen" id="cluster">
       <div class="card cluster" id="wCluster">
         <div class="cl-glow"></div>
-        <button class="xp" data-xp="cluster" aria-label="Plein écran"></button>
         <div class="gauge" id="gSpeed"></div>
         <div class="cmid">
           <div class="c-date" id="dateTxt"></div>
@@ -1059,33 +1125,6 @@ body.forcep #rot{display:none!important}
         </div>
         <div class="gauge" id="gAlt"></div>
       </div>
-      <div class="row2">
-        <div class="card nav-card" id="wNav">
-          <div class="map"></div>
-          <div class="ttl"><div class="ico i-waze" data-icon="nav" id="navIco"></div><span id="navTtl">Waze</span><small id="navSub">Destinations</small><button class="xp" data-xp="nav" aria-label="Plein écran"></button></div>
-          <button class="nav-next" id="navNext" data-go="gps" style="display:none"></button>
-          <div class="dest-quick" id="destQuick"></div>
-        </div>
-        <div class="card music-card" id="wMusic">
-          <div class="ttl"><div class="ico i-music" data-icon="note"></div>Musique<button class="xp" data-xp="music" aria-label="Plein écran"></button></div>
-          <div class="np">
-            <div class="yt-slot" id="ytSlotCard"><span>YouTube</span></div>
-            <div class="art" data-icon="note"></div>
-            <div><b id="npTitle">Apple Music</b><span id="npSub">Toucher pour ouvrir</span></div>
-            <div class="ctrl">
-              <a id="mPrev" aria-label="Playlist précédente"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zM9.5 12 18 6v12z"/></svg></a>
-              <a id="mPlay" class="big" aria-label="Ouvrir"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></a>
-              <a id="mNext" aria-label="Playlist suivante"><svg viewBox="0 0 24 24"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"/></svg></a>
-            </div>
-          </div>
-          <div class="plq" id="plQuick"></div>
-        </div>
-        <div class="card fav-card" id="wFav">
-          <div class="ttl"><div class="ico i-phone" data-icon="phone"></div>Favoris<button class="xp" data-xp="fav" aria-label="Plein écran"></button></div>
-          <div class="favs" id="favQuick"></div>
-        </div>
-      </div>
-      <div class="empty" id="dashEmpty" style="display:none;margin:auto">Tous les widgets sont masqués.<br><button class="pill acc" data-open-tab="home">Choisir les widgets</button></div>
     </section>
 
     <!-- GPS -->
@@ -1119,6 +1158,7 @@ body.forcep #rot{display:none!important}
     <section class="screen" id="grid">
       <button data-go="dash"><div class="ico i-dash" data-icon="dash"></div><span>Tableau de bord</span></button>
       <button data-go="gps"><div class="ico i-gps" data-icon="gps"></div><span>GPS</span></button>
+      <button data-go="cluster"><div class="ico i-gauge" data-icon="gauge"></div><span>Compteur</span></button>
       <button data-go="waze"><div class="ico i-waze" data-icon="nav"></div><span>Waze</span></button>
       <button data-go="music"><div class="ico i-music" data-icon="note"></div><span>Musique</span></button>
       <button data-go="phone"><div class="ico i-phone" data-icon="phone"></div><span>Téléphone</span></button>
@@ -1223,6 +1263,7 @@ const IC={
  down:'<svg viewBox="0 0 24 24"><path d="m12 18 8-8H4z"/></svg>',
  play:'<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
  car:'<svg viewBox="0 0 24 24"><path d="M18.9 6c-.2-.6-.8-1-1.4-1H6.5c-.7 0-1.2.4-1.4 1L3 12v8a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h12v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-8zM6.5 16a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm11 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM5 11l1.5-4.5h11L19 11z"/></svg>',
+ gauge:'<svg viewBox="0 0 24 24"><path d="M12 4a10 10 0 0 0-8.66 15h17.32A10 10 0 0 0 12 4zm0 2a8 8 0 0 1 7.4 11H4.6A8 8 0 0 1 12 6zm3.9 2.7-4.6 5.1a1.6 1.6 0 1 0 1.6 1.6z"/></svg>',
  gps:'<svg viewBox="0 0 24 24"><path d="M12 2 4.5 20.3l.7.7L12 17.6l6.8 3.4.7-.7z"/></svg>',
  expand:'<svg viewBox="0 0 24 24"><path d="M4 4h6v2H6v4H4zm10 0h6v6h-2V6h-4zM4 14h2v4h4v2H4zm14 0h2v6h-6v-2h4z"/></svg>',
  shrink:'<svg viewBox="0 0 24 24"><path d="M8 4h2v6H4V8h4zm6 0h2v4h4v2h-6zM4 14h6v6H8v-4H4zm10 0h6v2h-4v4h-2z"/></svg>',
@@ -1254,13 +1295,13 @@ const DEF={
  cont:[],
  pl:[],
  wall:'nuit', photo:null, accent:'#0a84ff', plIdx:0, blur:14, dim:.35,
- widgets:{cluster:true,nav:true,music:true,fav:false}, focus:null, musicApp:'apple', navApp:'gps',
+ widgets:{nav:true,music:true,info:true,fav:false}, focus:null, musicApp:'apple', navApp:'gps',
  carBody:'#f4f4f2', carRoof:'#0c0c0e', carRot:0, hasGlb:false
 };
 let S;
 let canStore=true;
 function load(){
- try{const r=localStorage.getItem(KEY);S=r?Object.assign({},JSON.parse(JSON.stringify(DEF)),JSON.parse(r)):JSON.parse(JSON.stringify(DEF));S.widgets=Object.assign({},DEF.widgets,S.widgets||{});}
+ try{const r=localStorage.getItem(KEY);S=r?Object.assign({},JSON.parse(JSON.stringify(DEF)),JSON.parse(r)):JSON.parse(JSON.stringify(DEF));S.widgets=Object.assign({},DEF.widgets,S.widgets||{});if(S.lay!==2){S.widgets=Object.assign({},DEF.widgets);S.focus=null;S.lay=2}}
  catch(e){canStore=false;S=JSON.parse(JSON.stringify(DEF));}
 }
 function save(){
@@ -1306,6 +1347,7 @@ function go(id){
  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id===id));
  document.querySelectorAll('.side-apps button').forEach(b=>b.classList.toggle('on',b.dataset.go===id||(id==='msg'&&b.dataset.go==='phone')||(b.dataset.go==='navapp'&&(id==='gps'||id==='waze'))));
  if(id==='gps')gpsShow();
+ if(id==='dash')setTimeout(()=>{try{DM.map&&DM.map.invalidateSize();if(DM.map&&lastPos)DM.map.setView([lastPos.coords.latitude,lastPos.coords.longitude],NAV.active?16:15)}catch(e){}},60);
  setTimeout(()=>{try{ytPlace()}catch(e){}},280);
  if(id==='settings')renderPane();
 }
@@ -1317,6 +1359,7 @@ function tick(){
  const d=new Date();
  $('#clock').textContent=d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
  $('#dateTxt').textContent=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+ const idd=$('#iDate');if(idd)idd.textContent=d.toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});
 }
 tick();setInterval(tick,10000);
 
@@ -1469,6 +1512,7 @@ function setCarPic(blob){
  if(carURL){URL.revokeObjectURL(carURL);carURL=null}
  if(blob)carURL=URL.createObjectURL(blob);
  $('#carPic').style.backgroundImage=carURL?`url(${carURL})`:'none';
+ $('#iCar').style.backgroundImage=carURL?`url(${carURL})`:'none';$('#wInfo').classList.toggle('has-car',!!carURL);
  $('#carPic').classList.toggle('fade',!!blob&&blob.type!=='image/png');
  document.querySelector('.cluster').classList.toggle('has-car',!!carURL);
 }
@@ -1496,7 +1540,7 @@ function srcChooser(){
  if(S.musicApp==='youtube'){const n=document.createElement('p');n.className='note';n.textContent='Colle des liens de playlists YouTube ou YouTube Music (Partager › Copier le lien). La musique se lit dans l\'app avec la pochette et le titre ; des pubs peuvent passer sans YouTube Premium.';d.appendChild(n)}
  return d;
 }
-const WID=[['cluster','Compteur','dash','i-dash'],['nav','Waze & destinations','nav','i-waze'],['music','Musique','note','i-music'],['fav','Favoris (appels)','phone','i-phone']];
+const WID=[['nav','Carte & navigation','gps','i-gps'],['music','Musique','note','i-music'],['info','Vitesse & météo','gauge','i-gauge'],['fav','Favoris (appels)','phone','i-phone']];
 function renderHomePane(body){
  body.innerHTML='<div class="sec">Widgets du tableau de bord</div>';
  WID.forEach(([k,n,ic,cl])=>{
@@ -1510,18 +1554,19 @@ function renderHomePane(body){
  b.innerHTML=`${S.focus?'<button class="pill acc" id="exitFull">Quitter le plein écran</button>':''}<button class="pill" id="resetLay">Disposition par défaut</button>`;
  body.appendChild(b);
  const n=document.createElement('p');n.className='note';
- n.innerHTML=`Astuce : sur le tableau de bord, touche ${IC.expand.replace('<svg','<svg width="13" height="13" fill="currentColor" style="vertical-align:-2px"')} sur une carte pour la mettre en plein écran, et ${IC.shrink.replace('<svg','<svg width="13" height="13" fill="currentColor" style="vertical-align:-2px"')} pour revenir. Si tu masques le compteur, les autres cartes s'agrandissent.`;
+ n.innerHTML=`Astuce : sur le tableau de bord, touche ${IC.expand.replace('<svg','<svg width="13" height="13" fill="currentColor" style="vertical-align:-2px"')} sur une carte pour la mettre en plein écran, et ${IC.shrink.replace('<svg','<svg width="13" height="13" fill="currentColor" style="vertical-align:-2px"')} pour revenir. Si tu masques la carte, les autres widgets s'agrandissent. Le compteur complet (avec ta voiture) est dans l'app Compteur de la grille.`;
  body.appendChild(n);
  const x=$('#exitFull');if(x)x.onclick=()=>{S.focus=null;save();layoutDash();renderHomePane(body)};
  $('#resetLay').onclick=()=>{S.widgets=Object.assign({},DEF.widgets);S.focus=null;save();layoutDash();renderHomePane(body);toast('Disposition réinitialisée')};
 }
 function layoutDash(){
- const W=S.widgets,f=(S.focus&&W[S.focus])?S.focus:null;
- const el={cluster:$('#wCluster'),nav:$('#wNav'),music:$('#wMusic'),fav:$('#wFav')};
+ const W=S.widgets,f=(S.focus&&W[S.focus]&&S.focus!=='nav')?S.focus:null;
+ const el={nav:$('#wNav'),music:$('#wMusic'),info:$('#wInfo'),fav:$('#wFav')};
  const vis=k=>f?k===f:!!W[k];
  for(const k in el){el[k].style.display=vis(k)?'':'none'}
- $('.row2').style.display=['nav','music','fav'].some(vis)?'':'none';
- const d=$('#dash');d.classList.toggle('bigrow',!!f||!vis('cluster'));d.classList.toggle('focus',!!f);
+ $('#dcol').style.display=['music','info','fav'].some(vis)?'':'none';
+ const d=$('#dash');d.classList.toggle('bigrow',!!f||!vis('nav'));d.classList.toggle('focus',!!f);
+ setTimeout(()=>{try{DM.map&&DM.map.invalidateSize()}catch(e){}},50);
  $('#dashEmpty').style.display=Object.keys(el).some(vis)?'none':'';
  document.querySelectorAll('.xp').forEach(b=>{b.innerHTML=f===b.dataset.xp?IC.shrink:IC.expand;b.setAttribute('aria-label',f===b.dataset.xp?'Quitter le plein écran':'Plein écran')});
  renderDash();
@@ -1659,6 +1704,7 @@ function animG(){
   const d=(f*100).toFixed(2)+' 100';g.pg.setAttribute('stroke-dasharray',d);g.pv.setAttribute('stroke-dasharray',d);
   g.nd.style.transform=`rotate(${A0+(A1-A0)*f}deg)`;}
  if(G.gSpeed.live)G.gSpeed.v.textContent=Math.round(G.gSpeed.cur);
+ {const is=$('#iSpd');if(is)is.textContent=G.gSpeed.live?Math.round(G.gSpeed.cur):'--';}
  requestAnimationFrame(animG);
 }
 function setSpeed(kmh){
@@ -1719,6 +1765,7 @@ async function getWeather(lat,lon){
   const c=j.current;let w=WMO[c.weather_code]||['🌡️',''];
   if(c.is_day===0&&c.weather_code<=1)w=['🌙',w[1]];
   $('#wIco').textContent=w[0];$('#wTemp').textContent=Math.round(c.temperature_2m)+'°';
+  $('#iW').textContent=w[0]+' '+Math.round(c.temperature_2m)+'°';
   const mx=j.daily&&j.daily.temperature_2m_max?Math.round(j.daily.temperature_2m_max[0]):null,mn=j.daily&&j.daily.temperature_2m_min?Math.round(j.daily.temperature_2m_min[0]):null;
   $('#wDesc').textContent=w[1]+(mx!=null?` · ${mn}° / ${mx}°`:'');
   weatherDone=true;
@@ -1790,9 +1837,26 @@ function gpsShow(){
  gpsInit();setTimeout(()=>NAV.map&&NAV.map.invalidateSize(),60);
  renderGpsChips();updVoiceBtn();
 }
-function setHead(deg){if(deg==null||!isFinite(deg))return;NAV.lastHead=deg;const el=NAV.me&&NAV.me.getElement();if(el){const m=el.querySelector('.me');if(m)m.style.transform=`rotate(${deg}deg)`}}
+function setHead(deg){if(deg==null||!isFinite(deg))return;NAV.lastHead=deg;{const de=DM.me&&DM.me.getElement();if(de){const m=de.querySelector('.me');if(m)m.style.transform=`rotate(${deg}deg)`}}const el=NAV.me&&NAV.me.getElement();if(el){const m=el.querySelector('.me');if(m)m.style.transform=`rotate(${deg}deg)`}}
+const DM={map:null,me:null,line:null};
+function dashMapInit(){
+ if(DM.map||!window.L||framed)return;
+ const c=lastPos?[lastPos.coords.latitude,lastPos.coords.longitude]:[45.1885,5.7245];
+ DM.map=L.map('dashMap',{zoomControl:false,attributionControl:true,dragging:false,scrollWheelZoom:false,doubleClickZoom:false,touchZoom:false,boxZoom:false,keyboard:false,tap:false}).setView(c,15);
+ DM.map.attributionControl.setPrefix(false);
+ L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:20,attribution:'© OSM © CARTO'}).addTo(DM.map);
+ DM.me=L.marker(c,{icon:L.divIcon({className:'me-ic',html:'<div class="me">'+ME_SVG+'</div>',iconSize:[44,44],iconAnchor:[22,22]}),interactive:false});
+ if(lastPos)DM.me.addTo(DM.map);
+ $('#wNav').classList.add('live');
+ $('#dashMap').addEventListener('click',()=>go('navapp'));
+}
+function dashRoute(){
+ if(!DM.map)return;if(DM.line){DM.line.remove();DM.line=null}
+ if(NAV.active&&NAV.coords.length){const acc=getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()||'#0a84ff';DM.line=L.polyline(NAV.coords,{color:acc,weight:6}).addTo(DM.map)}
+}
 function gpsOnPos(p){
- if(!NAV.map)return;
+ if(DM.map){const ll=[p.coords.latitude,p.coords.longitude];if(!DM.map.hasLayer(DM.me))DM.me.addTo(DM.map);DM.me.setLatLng(ll);if(cur==='dash')DM.map.setView(ll,NAV.active?16:15,{animate:true})}
+ if(!NAV.map){gpsInit();if(!NAV.map)return}
  const ll=[p.coords.latitude,p.coords.longitude];
  if(!NAV.map.hasLayer(NAV.me))NAV.me.addTo(NAV.map);
  NAV.me.setLatLng(ll);
@@ -1829,6 +1893,7 @@ function prepRoute(rt){
  const acc=getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()||'#0a84ff';
  NAV.line=L.layerGroup([L.polyline(NAV.coords,{color:'#000',weight:11,opacity:.35}),L.polyline(NAV.coords,{color:acc,weight:7,opacity:1})]).addTo(NAV.map);
  NAV.idx=0;NAV.announced={};NAV.off=0;
+ setTimeout(dashRoute,0);
 }
 function waitPos(ms){return new Promise(res=>{if(lastPos)return res(lastPos);const t0=Date.now(),iv=setInterval(()=>{if(lastPos||Date.now()-t0>ms){clearInterval(iv);res(lastPos)}},300)})}
 function openWazeTo(q){const a=document.createElement('a');linkAttrs(a,wazeUrl(q));document.body.appendChild(a);a.click();a.remove()}
@@ -1890,7 +1955,7 @@ function arrive(){
  setTimeout(()=>{if(!NAV.active)stopNav()},6000);
 }
 function stopNav(){
- NAV.active=false;NAV.dest=null;if(NAV.line){NAV.line.remove();NAV.line=null}if(NAV.destMk){NAV.destMk.remove();NAV.destMk=null}
+ NAV.active=false;NAV.dest=null;if(NAV.line){NAV.line.remove();NAV.line=null}if(DM.line){DM.line.remove();DM.line=null}if(NAV.destMk){NAV.destMk.remove();NAV.destMk=null}
  try{speechSynthesis.cancel()}catch(e){}
  gpsState('idle');renderDash();
 }
@@ -2019,6 +2084,7 @@ $('#mPrev').addEventListener('click',e=>{if(!ytMode())return;e.preventDefault();
 /* ---------- Init ---------- */
 renderAll();
 buildGauges();showTrip();
+try{dashMapInit()}catch(e){}
 if(S.hasCar)idbGet('carphoto').then(b=>b&&setCarPic(b)).catch(()=>{});
 if(S.photo){idbSet('photo',null).catch(()=>{})}
 if(S.hasPhoto&&!S.photo){idbGet('photo').then(b=>{if(b){photoURL=URL.createObjectURL(b);applyLook()}}).catch(()=>{})}
